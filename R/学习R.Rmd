@@ -1,0 +1,1574 @@
+---
+---
+---
+
+# 学习R
+
+```{r}
+# 学习过程的各种代码、函数保存在目录：A:/Rstudio/学习R 下，学习R.R    学习R.RData
+path = 'A:/Rstudio/学习R'
+```
+
+## 1、R入门
+
+基本的R命令
+
+```{r}
+help()   # 获得帮助
+help.start() # R语言的入门帮助
+help('')  # 输入函数，获得函数的帮助
+
+example('')  # 输入函数，获得函数使用示例
+
+data()  # 查看内置数据集，输入数据集名称，未输入数据集名称则列出数据集信息
+
+getwd() # 获得当前工作路径
+setwd() # 设置工作路径
+dir() # 查看当前工作目录下的文件
+
+ls()  # 列出当前工作环境的变量
+
+rm()  # 移除指定变量
+
+history()  #查看历史命令
+
+save.image('.RData')  # 保存工作映像
+
+options()  # 
+
+# savehistory('filename.Rhistory')  # 将历史命令保存为文件夹内
+# loadhistory('history.Rhistory')  # 导入历史命令
+# save(object,file = filename.RData)  # 保存变量到指定工作映像文件内
+
+load('filename.RData') 导入工作映像
+
+source('a_script.R')  # 运行脚本
+
+# 储存变量,以便重复使用
+lmfit <- lm(mpg~wt,data=mtcars)  # 讲运算结果存在变量中
+summary(lmfit)  # 调用运算结果
+
+# 设置镜像
+options(repos=c(CRAN="https://mirror.tuna.tsinghua.edu.cn/CRAN/"))
+
+```
+
+关于R包
+
+```{r}
+install.packages('packagesname')  # 安装R包
+
+library('packagename')  # 导入R包
+
+library()   # 显示库中有的包
+
+search() #  查看已加载的可用R包
+
+.libPaths()  # 查看R包所在位置
+
+update.packages('packagename') # 更新R包
+
+installed.packages() # 列出已安装的R包
+
+
+help(package="ggplot2")  # help(package("包的名字”)查看包的功能
+```
+
+## 2、R的基本数据结构
+
+一些基本的数据知识
+
+```{r}
+# 字符串变量
+a_str <- 'Rstudio'
+
+# 数字变量
+a_numb <- 23
+
+# 逻辑型变量
+a_logi <- TRUE
+a_F <- FALSE
+
+```
+
+数据类型、结构的查看
+
+```{r}
+# 查看数据大类，character、numeric、logical
+mode()
+
+# 查看数据细类，integer、double、single、float
+typeof()
+
+# 查看变量类型，vector、data.frame、matrix、factor、list
+class()
+```
+
+### 2.1 向量 vector
+
+```{r}
+# 创建向量：函数c()
+
+x<-c(1.31,1.46,2.23,4.113,5.323) # 创建数值向量
+
+y<-c(TRUE,FALSE,TRUE,TRUE)   # 创建逻辑性向量
+
+z<-c('a','ab','c','d')   # 创建字符型向量
+
+a_vector <- c(2:10)  # 连续数值序列向量
+
+## 标量，只有一个元素的向量
+a<-8
+
+b<-'as'
+
+# 访问向量
+print(x)
+x[2:4]  # 查看向量的第2到第4个元素
+x[c(1,3)] # 访问向量的第1和第3个元素
+
+# 判断是否为向量,返回逻辑型TRUE or FALSE
+is.vector(x)
+
+# 计算向量长度（元素数量）
+length(x)
+```
+
+向量的运算
+
+```{r}
+# 向量的运算:一一对应
+x1<-c(1,2,3,4,5,6,7,8,9)
+y1<-c(2,1,3,5,6,7,8,9,0)
+x1+y1
+x1*y1
+```
+
+### 2.2 矩阵 matrix
+
+```{r}
+# 创建矩阵，matrix()
+
+# 创建矩阵matrix(元素，行数，列数，按行（TRUE）按列（FALSE）填充，dimnames=list（行名，列名）)
+matrix1<-matrix(2:10,  # 创建矩阵的元素
+                nrow = 3,     # 矩阵行数
+                ncol = 3,     # 矩阵列数
+                byrow = TRUE,  # 元素是否按行填充
+                dimnames =list(c('A','B','C'),c('Q','E','R'))  # 行名和列名
+                )
+matrix1
+
+# 访问矩阵内元素
+
+my_matrix<-matrix(factors<-c(1,2,1,3,2,4,3,9),nrow=2,ncol=4,byrow=TRUE,
+                  dimnames=list(r_name<-c("R1","R2"),c_name<-c("C1","C2","C3","C4")))
+
+my_matrix[2,] # 访问矩阵的第二行元素
+my_matrix[,3] # 访问矩阵第三列元素
+my_matrix[2,3] # # 访问矩阵内第2行，第3列的元素，matrix[i,j]
+```
+
+矩阵的计算
+
+```{r}
+# 矩阵乘法
+a<-matrix(2:6)  # 创建列矩阵（只有一列）
+b<-matrix(6:10,1) # 创建行矩阵（只有一行）
+
+c <- a%*%b # 内积
+c
+
+d<-a%o%b # 外积
+d
+
+# 矩阵的转置
+t(c)
+
+# 矩阵的行列式
+det(c)
+
+```
+
+### 2.3 数组 array
+
+```{r}
+# 用array()函数创建大于二维平面的数组，
+
+num<-c(1:25)
+dim1<- c("x1","x2")
+dim2<- c("y1","y2","y3")
+dim3<- c("z1","z2","z3","z4","z5")
+
+# 创建数组
+my_array<-array(num,    # 创建数组的元素
+                c(2,3,5),  # 各维度下标的最大值，即每个维度几行、几列、几层
+                dimnames=list(dim1,dim2,dim3)) # 各维度的标签，名称
+my_array
+
+my_array[1,2,3] # dim1中x1，dim2中y2，dim3中z3的元素
+```
+
+### 2.4 数据框 dataframe
+
+```{r}
+# 创建数据框data.frame(,),每一列的数据是相同格式的
+num1<-c(1,2,3,4)
+name<-c("zero","one","two","three")
+num2<-c(2,3,4,5)
+
+# 创建数据框，每列的元素个数相同
+my_data<-data.frame(ID = num1, # ID为第一列的列明，num1为第一列的元素
+                    name = name,
+                    value = num2)
+my_data
+
+
+#数据框访问（调用）
+my_data[1]  # 调用数据框第一列数据
+my_data[c("ID")] # 通过列明调用ID列
+my_data$name    # 表示从my_data数据框内访问name列
+
+
+
+# 访问数据框
+my_data[,1:2] # 访问数据框的第一到第二列数据
+
+my_data[1:2,] # 访问数据框的第一、二行
+
+my_data[1:2,1:2] # 访问数据框的第一、二行的第一、二列的元素
+
+# 显示数据框的信息，
+str(my_data) 
+
+# 对数据框不同变量做不同处理，连续性的数值变量会求最值，均值，各四分位数，类别型变量显示频数等
+summary(my_data) 
+
+
+```
+
+数据框从搜索路径添加、移除
+
+```{r}
+attach(my_data)# 将数据框添加到搜索路径
+detach(my_data) # 将数据框从搜索路径移除
+
+```
+
+### 2.5 因子 factor
+
+```{r}
+# 创建因子 factor(),类似分组变量
+
+diabetes <- c("type1","type2","type1","type1") # 表示名义形变量
+
+# 创建因子变量
+diabetes1 <- factor(diabetes) # 这里将diabetes<-c("type1","type2","type1","type1")存储为（1，2，1，1）向量，即存储为因子
+
+diabetes1
+
+# 表示有序型变量
+status<-c("poor","improve","excellent","poor")
+status1<-factor(status,ordered = TRUE)
+status1 # 输出结果表明顺序为excellent < improve < poor，此时默认按字母排列顺序
+
+# 用levels=（）指定顺序
+status2<-factor(status,order=TRUE,
+                levels=c("poor","iaprove","excellent"))
+status2
+
+
+# 数值型变量用levels labels编码成因子
+sex <- c(1,2,2,2,1,1,1,2,2,2,1,1,2,1,2,1,1)
+sex_factor <- factor(sex,levels = c(1:2),labels=c('Male','Female'))
+
+sex
+sex_factor
+```
+
+### 2.6 列表 list
+
+```{r}
+# 创建列表list(),列表内可以是向量，矩阵，数据框，标量
+a<-c(1,2,3,4,5)
+b<-matrix(c(12,2,1,2,1,2,1,2,1,2,1,2),3,4)
+c<-data.frame(num1=c(1,2,3,4),
+              name=c("zero","one","two","three"),
+              num2=c(2,3,4,5))
+
+my_list<-list(a,b,c)
+my_list
+
+# 访问列表内的内容
+my_list[3] # my_list[[3]]访问列表的第三部分，即这里的数据框
+
+my_list[b]
+```
+
+### 补充：R的基本语句
+
+R的基本语句包括：条件语句、循环语句
+
+条件语句：if语句、if···else语句、if··else if···语句
+
+#### 条件语句
+
+-   **if语句**
+
+```{r}
+# if语句的基本结构
+
+# if( 条件判断语句 ){
+#   条件判断为TRUE是执行的命令
+# }
+
+# if语句的示例
+
+a <- 3
+if(a > 2){
+  print('a是一个大于2的数')
+}
+```
+
+-   **if···else语句**
+
+```{r}
+# if···else语句的基本结构
+
+# if( 条件判断语句 ){
+#   条件判断为TRUE是执行的命令
+# }else{
+#   条件语句判断为FAlSE时执行的命令
+# }
+
+
+# if···else语句示例
+
+b <- 5
+if( b*3 == 15){
+  print('b的值是5')
+}else{
+  print('b的值不是5')
+}
+```
+
+-   **多个if···else嵌套的条件语句**
+
+```{r}
+
+c <- 66
+
+if( c >5 ){
+  print('c的值大于5')
+}else if(c == 5){
+  print('c的值是5')
+}else{
+  print('c的值小于5')
+}
+```
+
+#### 循环语句
+
+-   repeat循环
+
+```{r}
+
+```
+
+-   while循环
+
+```{r}
+
+```
+
+-   for循环
+
+```{r}
+
+```
+
+## 3、R导入数据
+
+设置工作路径
+
+```{r}
+path = "A:/Rstudio/学习R/学习R_数据"
+
+setwd(path)
+
+dir() # 查看当前工作目录下的文件
+
+```
+
+### 3.1、导入文本文件(\*\*\* .txt)
+
+```{r}
+# 读取文本文件txt，设置sep = ','
+data_txt <- read.table("A:/Rstudio/学习R/学习R_数据/GSM6422903.txt", # 文件路径
+                       header = TRUE,  # 第一行是否为列名
+                       sep = '\t')   # 读取制表符分隔行 的文件
+
+```
+
+### 3.2、导入Excel文件（\*\*\*.xlsx)
+
+```{r}
+# 用readxl包读取
+library(readxl)
+data_excel <- read_excel("A:/Rstudio/学习R/学习R_数据/江西油价.xlsx",  # 文件路径
+                         sheet = 1)         # 按excel的shell索引
+
+# 其他包，openxl安装需要先安装Rtools
+```
+
+### 3.3、导入csv文件（\*\*\*.csv)
+
+```{r}
+data_csv <- read.csv("A:/Rstudio/学习R/学习R_数据/油价.csv",
+                     fileEncoding = "GB18030") # 有中文时，传此参数
+
+
+```
+
+## 4、R统计分析
+
+### 4.1、描述统计
+
+#### 4.1.1、了解数据的分布情况、集中趋势和离散程度等信息
+
+```{r}
+# 以iris数据集为例，介绍R对数据进行描述统计
+data <- iris # 读取iris数据集
+head(data,10) # 查看iris数据的前10行
+
+# 计算iris数据集的sepal.length的情况
+
+# 反映数据的集中情况
+mean(iris$Sepal.Length)  # 均值，反映集中情况
+median(iris$Sepal.Length)  # 中位数，反映集中情况
+mode(iris$Sepal.Length)  # 众数，反映集中情况
+
+# 反映数据的分散情况
+max(iris$Sepal.Length)  # 最大值，
+min(iris$Sepal.Length)  # 最小值
+range(iris$Sepal.Length) # 输出极差
+var(iris$Sepal.Length)  # 方差
+sd(iris$Sepal.Length)  # 标准差
+
+
+
+# 一个函数解决描述统计
+summary(iris$Sepal.Length)  
+```
+
+#### 4.1.2、数据的分布形态
+
+通过图反映数据分布形态，分布形态包括：偏态+峰度
+
+偏态
+
+除了集中趋势和离散趋势,我们还需要了解数据的分布形态。常见的分布形态有偏态和峰度。
+
+偏态描述数据分布的对称性,分为左偏(负偏)、对称和右偏(正偏)三种情况。
+
+偏度系数的取值范围为(-∞,+∞),0 表示数据分布对称,负值表示左偏,正值表示右偏。
+
+通过观察数据的**直方图**或计算**偏度系数**来判断数据的**偏态**。
+
+```{r}
+library(moments)
+
+# 绘制直方图
+hist(iris$Sepal.Length) # 绘制直方图
+skewness(iris$Sepal.Length)  # 计算偏度系数，右偏
+
+hist(iris$Sepal.Width)  # 绘制直方图
+skewness(iris$Sepal.Width)  # 计算偏度系数,右偏
+```
+
+峰度
+
+峰度描述数据分布曲线顶部的尖峭或平坦程度,分为尖顶(leptokurtic)、正态(mesokurtic)和平顶(platykurtic)三种情况。
+
+我们可以通过观察数据的 QQ 图或计算峰度系数来判断数据的峰度。QQ 图可以用来检验数据是否符合正态分布。如果数据点大致落在参考线上,则数据可能服从正态分布。
+
+在 R 中,可以使用 qqnorm()函数绘制 QQ 图,moments 包的 kurtosis()函数计算峰度系数。峰度系数的取值范围为(-∞,+∞),0 表示数据符合正态分布,大于 0 为尖顶,小于 0 为平顶。
+
+```{r}
+# 计算峰度
+library(moments)
+kurtosis(iris$Sepal.Length)
+
+# 绘制QQ图
+qqnorm(iris$Sepal.Length)
+qqline(iris$Sepal.Width)
+```
+
+## 4.2、假设检验
+
+假设检验是统计推断的重要方法,用于根据样本数据对总体参数或分布做出推断。它的基本思想是,先对总体提出一个假设(原假设),然后通过样本数据来验证这个假设是否成立。如果样本数据与原假设出现较大差异,我们就有理由拒绝原假设。
+
+### 4.2.1、T检验
+
+**T检验**（T-test） 是一种统计假设检验方法，用于判断两组数据的**均值**是否存在显著差异。它的核心思想是通过比较样本均值的差异与数据变异性（标准差）的关系，推断这种差异是否具有统计学意义。
+
+**T检验的适用条件**
+
+1.  **数据类型**：连续变量（如身高、温度、考试成绩等）。
+
+2.  **分布要求**：
+
+    -   数据应近似服从正态分布（尤其是小样本时，n \< 30）。
+
+    -   若样本量较大（n ≥ 30），根据中心极限定理，可放宽正态性要求。
+
+3.  **方差齐性**：两独立样本T检验要求两组数据的方差大致相等（可通过Levene检验或F检验判断）。
+
+T检验包括：单样本T检验、独立样本T检验、配对样本T检验
+
+#### 单样本T检验（One-Sample T-test）
+
+-   **目的**：检验单个样本的均值是否与已知的总体均值存在显著差异。
+
+-   公式：其中Xˉ为样本均值，μ为总体均值，s为样本标准差，n为样本量。
+
+```         
+![](images/clipboard-38014.png)
+```
+
+```{r}
+# 假设样本
+a_sample <- c(2,3,4,2,1,4,2,3,4,5,2,3,2,1,4,5,3,2,1,2,3,4,4)
+
+# 假设总体均值为2.5
+means <- 2.5
+
+t.test(a_sample,mu = means)
+
+# 小样本，正态性假设检验
+shapiro.test(a_sample) # Shapiro-Wilk检验（p > 0.05时认为正态）
+
+# 上述正态性检验表示，不符合正态性，误差大，选择用非参数检验
+# 非参数检验的Wilcoxon符号秩检验
+wilcox.test(a_sample, mu = means)
+
+# 用箱图对结果进行可视化
+boxplot(a_sample,main = '单样本T检验')
+abline(h = means,col = 'red',lty = 2) # 添加理论均值参考线
+```
+
+#### 独立样本T检验
+
+**独立样本t检验**（Independent Samples t-test）用于比较**两组独立数据**的均值是否存在显著差异。
+
+步骤：检查两组数据是否是连续型——检查两组数据是否服从正态分布——检查数据两组数据是否方差齐性——T检验——结果可视化
+
+**对于非正态数据**：考虑使用非参数检验（如Mann-Whitney U检验，**`wilcox.test(value ~ group, data = data)`**）。
+
+```{r}
+# 以iris的两列数据比较作为示例
+head(iris)
+
+# 根据一列分组变量提取对应列的数据和组数据，这里我们根据Species的分组变量，对setosa和versicolor两组及其对应的Sepal.Length数据提取出来
+iris_T <- subset(iris, Species %in% c("setosa", "versicolor"), 
+                      select = c("Sepal.Length", "Species"))
+
+# 比较sepal.length在setosa和versicolor两个品种间是否有差异
+
+# 用Shapiro-Wilk检验或QQ图对两组数据的正太性进行检验,p>0.05,认为服从正太分布
+
+shapiro_setosa <- shapiro.test(iris_T$Sepal.Length[iris_T$Species=='setosa'])  # 
+shapiro_versicolor <- shapiro.test(iris_T$Sepal.Length[iris_T$Species=='versicolor'])  # 
+print(c(shapiro_setosa,shapiro_versicolor))
+
+# 方差齐性检验,P>0.05认为方差齐性
+library(car)
+leveneTest(iris_T$Sepal.Length,iris_T$Species,data = iris)
+
+# 执行t检验
+# 若方差齐性（var.equal = TRUE）：使用Student's t-test。
+# 若方差不齐（var.equal = FALSE）：使用Welch's t-test（默认）
+
+t.test(iris_T$Sepal.Length[iris_T$Species=='setosa'],
+       iris$Sepal.Length[iris$Species=='versicolor'],var.equal = T)  # 方差齐性
+
+t.test(iris_T$Sepal.Length[iris_T$Species=='setosa'],
+       iris_T$Sepal.Length[iris_T$Species=='versicolor'],var.equal = F)  # 方差不齐性
+
+
+# 结果可视化
+library(ggplot2)
+library(ggpubr)  # 用于添加统计标记
+
+ggplot(iris_T, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.1, alpha = 0.5) +  # 显示数据点
+  stat_compare_means(method = "t.test", label = "p.format") +  # 添加p值
+  labs(title = "T-Test", x = "Species", y = "sepal.Length") +
+  theme_minimal()
+```
+
+#### 配对样本T检验
+
+用于比较**同一组受试对象**在两种不同条件下的测量值是否存在显著差异（如治疗前后、两种方法的测量结果等）
+
+**实际数据格式要求：**
+
+-   两列数值变量（必须长度相同）。
+
+-   每行代表同一受试对象的配对测量。
+
+**检查配对t检验的假设**
+
+配对t检验需满足：
+
+1.  **配对性**：数据必须是同一组对象的两次测量。
+
+2.  **差值正态性**：两列数据的差值近似服从正态分布（可用Shapiro-Wilk检验或QQ图检验）。
+
+对于不服从正态分布的数据，改用**Wilcoxon符号秩检验**（非参数替代）wilcox.test(paired_data$condition_A, paired_data$condition_B, paired = TRUE)
+
+```{r}
+# 创建配对数据
+
+paired_data <- data.frame(
+  flower_id = 1:50,  # 50朵setosa花
+  condition_A = iris$Sepal.Length[iris$Species == "setosa"],  # 条件A的测量值
+  condition_B = iris$Sepal.Length[iris$Species == "setosa"] + rnorm(50, mean = 0.5, sd = 0.3)  # 条件B的测量值（人为添加差异）
+)
+
+# 查看前6行
+head(paired_data)
+
+#  检查差值正态性
+
+# 计算差值
+differences <- paired_data$condition_B - paired_data$condition_A
+
+# Shapiro-Wilk检验
+shapiro_test <- shapiro.test(differences)
+print(shapiro_test)  # p值 > 0.05说明差值服从正态分布
+
+# QQ图可视化
+qqnorm(differences)
+qqline(differences, col = "red")
+
+
+# 执行配对T检验
+t_test_result <- t.test(
+  paired_data$condition_A, 
+  paired_data$condition_B, 
+  paired = TRUE,  # 关键参数，对于配对T检验，指定为T
+  alternative = "two.sided"  # 双侧检验（默认）
+)
+
+print(t_test_result)
+
+# 结果可视化
+# 方法1：箱线图 + 配对线（适合少量数据点）
+library(ggplot2)
+library(tidyr)
+
+# 转换数据为长格式
+paired_long <- pivot_longer(
+  paired_data, 
+  cols = c("condition_A", "condition_B"), 
+  names_to = "condition", 
+  values_to = "sepal_length"
+)
+
+# 绘制箱线图 + 配对线
+ggplot(paired_long, aes(x = condition, y = sepal_length)) +
+  geom_boxplot(width = 0.5, fill = "lightblue") +
+  geom_line(aes(group = flower_id), color = "gray", alpha = 0.5) +  # 配对线
+  geom_point(aes(color = condition), size = 2) +
+  labs(title = "Paired Samples t-test", x = "Condition", y = "Sepal Length") +
+  theme_minimal()
+
+
+# 方法2：差异分布直方图
+ggplot(data.frame(differences), aes(x = differences)) +
+  geom_histogram(binwidth = 0.1, fill = "skyblue", color = "black") +
+  geom_vline(xintercept = mean(differences), color = "red", linetype = "dashed") +
+  labs(title = "Distribution of Differences", x = "Difference (B - A)", y = "Frequency") +
+  theme_minimal()
+```
+
+### 4.2.2、方差分析
+
+方差分析(ANOVA)用于比较三个及以上样本均值的差异。根据因素的个数,方差分析可分为单因素方差分析和多因素方差分析。
+
+#### 单因素方差分析
+
+**检验方差齐性：**使用 **Levene检验**（对非正态数据更稳健）或 **Bartlett检验**（需数据正态）
+
+**执行ANOVA**
+
+**事后检验（多重比较）**
+
+```{r}
+# 以iris数据为例，比较不同Species（setosa, versicolor, virginica）的 Sepal.Length 均值差异。
+
+iris
+head(iris)
+
+# 方差齐性检验, Levene检验（对非正态数据更稳健）或Bartlett检验（需数据正态）：
+library(car)
+
+leveneTest(Sepal.Length ~ Species, data = iris) # p > 0.05说明方差齐性
+bartlett.test(Sepal.Length ~ Species, data = iris) 
+
+# 执行方差分析（ANOVA)
+anova_result <- aov(Sepal.Length ~ Species, data = iris)
+summary(anova_result)
+
+# 事后检验（多重比较）
+TukeyHSD(anova_result)  # 输出各组间的p值和差异
+plot(TukeyHSD(anova_result))  # 可视化置信区间
+
+# 统计分析结果的可视化
+# 箱线图 + 显著性标记（ggplot2 + ggpubr）
+library(ggplot2)
+library(ggpubr)
+
+ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  stat_compare_means(method = "anova", label.y = 9.5) +  # 添加ANOVA p值
+  stat_compare_means(comparisons = list(c("setosa", "versicolor"), 
+                     c("versicolor", "virginica"),c('setosa','virginica')), 
+                   method = "t.test", label = "p.signif") +  # 组间比较
+  labs(title = "One-Way ANOVA: Sepal Length by Species")
+```
+
+( **非参数替代（当数据不满足ANOVA假设）:**若数据不满足正态性或方差齐性，使用 **Kruskal-Wallis检验**（单因素）或 **Friedman检验**（重复测量）)
+
+```{r}
+# 单因素非参数检验
+kruskal.test(Sepal.Length ~ Species, data = iris)
+
+# 事后比较（Dunn检验）
+library(FSA)
+dunnTest(Sepal.Length ~ Species, data = iris, method = "bonferroni")
+```
+
+#### **双因素方差分析（Two-Way ANOVA）**
+
+以 **`ToothGrowth`** 数据集为例，分析牙齿长度（**`len`**）受 **剂量（`dose`）** 和 **补充剂类型（`supp`）** 的影响
+
+```{r}
+
+# 数据准备：
+data(ToothGrowth)
+ToothGrowth$dose <- factor(ToothGrowth$dose)  # 将剂量转为因子
+head(ToothGrowth)
+
+# 执行双因素ANOVA（含交互作用）：supp:dose：交互作用项（p < 0.05表示两者对结果有协同影响）。
+anova_two_way <- aov(len ~ supp * dose, data = ToothGrowth)
+summary(anova_two_way)
+
+library(emmeans)
+emm <- emmeans(anova_two_way, pairwise ~ supp | dose)  # 按剂量分组比较supp
+plot(emm, comparisons = TRUE)  # 可视化
+
+# 交互作用图（双因素ANOVA）：
+ggplot(ToothGrowth, aes(x = dose, y = len, color = supp, group = supp)) +
+  geom_point() +
+  stat_summary(fun = mean, geom = "line") +  # 绘制均值连线
+  labs(title = "Interaction Plot: Dose vs. Supplement Type")
+```
+
+### 4.2.3、卡方检验
+
+主要用于分析**分类变量**之间的关联性或拟合优度,包括卡方独立性检验、卡方拟合优度检验
+
+卡方独立性检验：检验两个分类变量是否独立（即是否存在关联）。
+
+-   性别（男/女）与吸烟习惯（是/否）是否有关联？
+
+-   广告类型（A/B/C）与购买意愿（高/中/低）是否相关？
+
+```{r}
+# 以Titanic数据集为例，分析乘客等级（Class）与生存状态（Survived）是否独立。
+
+# 提取数据并转换为二维列联表
+Titanic # 查看数据集
+data <- as.data.frame(Titanic)  # 将数据集转化为数据框
+head(data)
+titanic_table <- xtabs(Freq ~ Class + Survived, data = data)  # 创建二维列联表
+print(titanic_table)
+
+# 进行卡方检验
+# X-squared：卡方统计量。
+# df：自由度（(行数-1)*(列数-1)）。
+# p-value：显著性（p < 0.05 表示变量显著相关）。
+
+chi_test <- chisq.test(titanic_table)
+print(chi_test)
+
+chi_test$expected  # 期望频数
+chi_test$residuals # Pearson残差（标准化残差）
+
+# 结果可视化，颜色越深，观测值与期望值的偏差越大。
+library(vcd)
+mosaic(titanic_table, shade = TRUE, legend = TRUE)
+```
+
+```{r}
+a = 2
+switch(a,b = mean(a),a = a+3)
+```
+
+### 4.2.4、相关性检验
+
+相关性检验用于分析两个连续变量之间的线性关系（如身高与体重、广告投入与销售额
+
+**效应量解读**
+
+-   **\|r\| \< 0.3**：弱相关。
+
+-   **0.3 ≤ \|r\| \< 0.7**：中等相关。
+
+-   **\|r\| ≥ 0.7**：强相关。
+
+```{r}
+# 以R内置数据集 mtcars 为例，分析 mpg（每加仑英里数）和 wt（车重）的相关性。
+
+data(mtcars)
+head(mtcars[, c("mpg", "wt")])
+
+# Pearson相关系数（线性相关）：数据满足正态性和线性关系
+
+# 计算Pearson相关系数
+cor_pearson <- cor.test(mtcars$mpg, mtcars$wt, method = "pearson")
+print(cor_pearson)
+
+
+# Spearman秩相关（单调相关）：数据不满足正态性或存在非线性单调关系。
+
+cor_spearman <- cor.test(mtcars$mpg, mtcars$wt, method = "spearman")
+print(cor_spearman)
+
+# Kendall's Tau（有序数据或小样本）：样本量小或存在大量重复值。
+
+cor_kendall <- cor.test(mtcars$mpg, mtcars$wt, method = "kendall")
+print(cor_kendall)
+
+#  多变量相关性矩阵：分析数据框中多个变量的相关性：
+# 计算相关系数矩阵
+cor_matrix <- cor(mtcars[, c("mpg", "wt", "hp", "disp")], method = "pearson")
+print(cor_matrix)
+
+# 可视化（热图）：红色表示负相关，蓝色表示正相关。
+library(corrplot)
+corrplot(cor_matrix, method = "color", type = "upper", tl.col = "black")
+
+# 偏相关分析（控制混杂变量）：在控制其他变量（如 hp）的条件下，分析 mpg 和 wt 的关系：
+library(ppcor)
+pcor_test <- pcor.test(mtcars$mpg, mtcars$wt, mtcars[, "hp"])
+print(pcor_test) # 偏相关系数（estimate）和p值
+
+# 可视化
+# 散点图+回归线
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Scatterplot with Pearson Correlation", 
+       x = "Weight (1000 lbs)", y = "Miles per Gallon")
+
+# 散点图矩阵
+pairs(mtcars[, c("mpg", "wt", "hp")], pch = 19, lower.panel = NULL)
+```
+
+## 4.3、回归分析
+
+**回归分析**可以帮助你探索变量之间的因果关系或预测关系
+
+线性回归、逻辑回归、其他回归模型（泊松回归、岭回归）
+
+简单线性回归：用于分析**连续型因变量**与一个或多个自变量之间的关系。
+
+-   **Coefficients（系数）**：
+
+    -   **`Estimate`**：回归系数（斜率）。
+
+    -   **`Std. Error`**：标准误。
+
+    -   **`t value`**：t统计量。
+
+    -   **`Pr(>|t|)`**：p值（**p \< 0.05** 表示显著）。
+
+-   **R-squared**：模型解释的变异比例（0\~1，越大越好）。
+
+-   **F-statistic**：整体模型显著性。
+
+```{r}
+# 使用R内置的 mtcars 数据集，预测每加仑英里数（mpg）与车重（wt）和马力（hp）的关系：
+data(mtcars)
+head(mtcars[, c("mpg", "wt", "hp")])
+
+# 简单线性回归
+# 拟合模型：mpg ~ wt
+model_lm <- lm(mpg ~ wt, data = mtcars) # 拟合模型
+summary(model_lm)
+
+# 可视化
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Linear Regression: mpg ~ wt")
+```
+
+多元线性回归
+
+```{r}
+# 拟合模型：mpg ~ wt + hp
+model_lm_multi <- lm(mpg ~ wt + hp, data = mtcars)
+summary(model_lm_multi)
+```
+
+模型诊断
+
+检查回归假设（线性、正态性、同方差性、无多重共线性）：
+
+-   **残差 vs. 拟合值**：检查线性关系（应无趋势）。
+
+-   **QQ图**：检查残差正态性（点应接近直线）。
+
+-   **Scale-Location图**：检查同方差性（残差波动应均匀）。
+
+-   **Cook's距离**：检查异常值。
+
+```{r}
+# 绘制诊断图
+# par(mfrow = c(2, 2))
+plot(model_lm_multi)
+```
+
+多种共线性检验
+
+```{r}
+library(car)
+vif(model_lm_multi)  # 方差膨胀因子（VIF > 5 表示共线性严重）
+```
+
+逻辑回归
+
+用于分析**二分类因变量**（如0/1、Yes/No）与自变量的关系。
+
+-   **Coefficients**：
+
+    -   **`Estimate`**：对数几率比（log-odds）。
+
+    -   **`Pr(>|z|)`**：p值（**p \< 0.05** 表示显著）。
+
+-   **AIC**：模型拟合优度（越小越好）
+
+```{r}
+# 使用 Titanic 数据集（需转换）为例
+
+library(titanic)
+data <- titanic_train[, c("Survived", "Age", "Fare", "Sex")]
+data <- na.omit(data)  # 去除缺失值
+head(data)
+
+# 拟合逻辑回归模型
+model_logit <- glm(Survived ~ Age + Fare + Sex, 
+                   data = data, 
+                   family = binomial(link = "logit"))
+summary(model_logit)
+
+# 计算几率比
+exp(coef(model_logit))  # 几率比（OR > 1表示正影响）
+
+# 模型评估
+library(pROC)
+prob <- predict(model_logit, type = "response")
+roc_curve <- roc(data$Survived, prob)
+plot(roc_curve)  # ROC曲线
+auc(roc_curve)   # AUC值（0.5~1，越大越好）
+
+# 可视化
+ggplot(data, aes(x = Age, y = Survived)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "glm", 
+              method.args = list(family = "binomial"), 
+              se = FALSE, color = "blue") +
+  labs(title = "Logistic Regression: Survival ~ Age")
+```
+
+其他模型：泊松回归、岭回归
+
+**泊松回归（Poisson Regression）：**适用于**计数型因变量**（如事件发生次数）：
+
+**岭回归/套索回归（Ridge/Lasso Regression）：**用于**高维数据**或**共线性较强**的情况：
+
+```{r}
+library(glmnet)
+x <- model.matrix(mpg ~ ., mtcars)[, -1]  # 自变量矩阵
+y <- mtcars$mpg                           # 因变量
+model_lasso <- glmnet(x, y, alpha = 1)    # alpha=1为Lasso，0为Ridge
+plot(model_lasso, xvar = "lambda")        # 变量选择路径
+```
+
+模型比较与选择
+
+比较AIC BIC
+
+```{r}
+AIC(model_lm, model_lm_multi)  # AIC越小越好
+BIC(model_lm, model_lm_multi)  # BIC越小越好
+```
+
+交叉验证
+
+```{r}
+library(caret)
+train_control <- trainControl(method = "cv", number = 10)  # 10折交叉验证
+model_cv <- train(mpg ~ wt + hp, data = mtcars, 
+                  method = "lm", 
+                  trControl = train_control)
+print(model_cv)
+```
+
+## 
+
+## 5、R可视化
+
+### 5.1、ggplot2
+
+ggplot2 是一个 R 包，用于通过数据可视化进行统计计算和数据表示。它遵循底层图形语法，即图形语法，其中包含某些规则和独立组件，可用于以各种格式表示数据。
+
+ggplot2遵循图形语法：数据、图层、坐标系、主题
+
+```{r}
+# 以iris数据为例，演示ggplot2基本用法
+
+iris_visulization <- ggplot(iris,  # 指定数据集
+                            aes(Sepal.Length,Petal.Length,colour = Species))+   # 绘制的图例和属性
+  geom_point()+# 添加散点图
+  labs(y='Petal Length(cm)',x = 'Sepal Length(cm)')+  # 修改、定义坐标轴标签
+  ggtitle('iris_visulization')  # 定义图片标题
+
+
+print(iris_visulization)
+```
+
+在已定义图像添加内容
+
+```{r}
+# 在iris_visulization基础上添加
+
+# iris_visulization 添加文本
+iris_visulization + 
+  annotate('text',x = 6.0,y = 4.0,label = 'mid')  + # 添加文本，第一个参数指定为text
+  annotate("rect", xmin = 5, xmax = 7, ymin = 4, ymax = 6, alpha = .5) +   # 突出显示区域，第一个参数指定rect
+  annotate("segment", x = 5, xend = 7, y = 4, yend = 5, colour = "black") # 添加片段，参数segment
+
+
+```
+
+### 使用坐标轴
+
+```{r}
+iris_visulization1 <- ggplot(iris,  # 指定数据集
+                            aes(y = Sepal.Length,x = Petal.Length,colour = Species))+   # 绘制的图例和属性
+  geom_point()+ # 添加散点图
+  labs(y='Petal Length(cm)',x = 'Sepal Length(cm)')+  # 修改、定义坐标轴标签
+  ggtitle('iris_visulization')  # 定义图片标题
+print(iris_visulization1)
+```
+
+### 使用图例
+
+轴和图例统称为参考线。它们允许我们从图中读取观察值并根据原始值映射回去。图例键和刻度标签均由刻度线决定。图例和轴是根据绘图所需的相应比例和几何图形自动生成的。
+
+```{r}
+# 以iris为例
+library(ggplot2)
+data(iris)
+
+# 绘图
+pic <- ggplot(iris,aes(Sepal.Length,Petal.Length,colour = Species)) + 
+  geom_point()
+print(pic)
+```
+
+更改图例
+
+我们可以借助属性"legend.position"删除图例，并得到相应的输出 −
+
+```{r}
+pic + theme(legend.position = 'none')  # 删除图例
+```
+
+用属性"element_blank()"隐藏图例的标题，
+
+```{r}
+pic + theme(legend.title = element_blank())  # 隐藏图例标题
+```
+
+更改图例位置，根据需要使用图例位置。此属性用于生成准确的绘图表示。
+
+```{r}
+ #更改图例位置
+pic + theme(legend.position="top") # 图例在顶部
+
+pic + theme(legend.position="bottom")  # 图例在底部
+```
+
+更改图例的字体样式
+
+```{r}
+# 更改图例标题和文本字体样式
+# 图例标题
+pic + theme(legend.title = element_text(colour = "blue",  # 图例名称颜色
+                                        size = 10,  face = "bold"))
+# 图例标签
+pic + theme(legend.text = element_text(colour = "red", # 图例标签的颜色
+                                       size = 8,  face = "bold"))
+```
+
+ggplot2绘制散点图
+
+散点图显示一个变量与另一个变量的关联程度。变量之间的关系称为相关性，通常用于统计方法
+
+```{r}
+# 以iris为例
+
+pic_iris <- ggplot(iris,aes(Sepal.Length,Petal.Length,
+                            colour = Species)) + # colour 为点添加颜色
+  geom_point() # 绘制散点图
+
+pic_iris
+```
+
+使用 geom_point() 函数中名为 shape 的属性来更改点的形状
+
+```{r}
+# 修改点的形状
+pic_iris + geom_point(shape = 8)
+```
+
+建立变量之间的关系。
+
+```{r}
+
+# 使用geom_smooth函数的属性方法，使用lm方法，添加回归线
+ggplot(iris, aes(Sepal.Length, Petal.Length, colour=Species)) +
+  geom_point(shape=1) +
+  geom_smooth(method=lm) # 有助于重叠模式和创建所需变量的模式
+```
+
+添加没有阴影置信区域的回归线（阴影区域表示置信区域以外的内容。）
+
+```{r}
+# 使用geom_smooth函数的属性方法，使用lm方法，添加回归线
+ggplot(iris, aes(Sepal.Length, Petal.Length, colour=Species)) +
+  geom_point(shape=1) +
+  geom_smooth(method=lm,se = F) # 传入参数se = F
+```
+
+ggplot2绘制抖动图
+
+抖动图包括可以描绘散点图的特殊效果。抖动只不过是一个随机值，它被分配给点以将它们分开
+
+```{r}
+ggplot(mpg, aes(cyl, hwy)) +
+  geom_point() +
+  geom_jitter(aes(colour = class))
+```
+
+ggplot2绘制条形图和直方图，计数图主要表现形式
+
+条形图以矩形方式表示分类数据。条形可以垂直和水平绘制。高度或长度与图形中表示的值成比例。条形图的 x 轴和 y 轴指定包含在特定数据集中的类别。
+
+直方图是一种条形图，它表示原始数据，并清晰地显示所述数据集的分布情况。
+
+```{r}
+# 条形计数图
+p <- ggplot(mpg,aes(x = factor(cyl),fill = cyl)) + 
+  geom_bar()  # 创建条形图，它采用称为计数的统计值属性。
+p
+```
+
+直方图
+
+geom_histogram() 包含创建直方图所需的所有属性
+
+```{r}
+ # 直方图计数图
+ggplot(data=mpg, aes(x=hwy)) +
+    geom_histogram( col="red",  # 线条颜色
+       fill="green",    # 填充颜色
+       alpha = .2,
+       binwidth = 5) 
+```
+
+堆叠条形图
+
+ggplot2绘制饼图
+
+饼图被视为圆形统计图，被分成多个切片来表示数值比例。
+
+创建饼图
+
+```{r}
+# 加载模块
+library(ggplot2)
+
+# 来源：频率表
+df <- as.data.frame(table(mpg$class))  # 对mpg的class列的列联表，并转化为数据框
+colnames(df) <- c("class", "freq")
+print(df)
+```
+
+```{r}
+pie <- ggplot(df, aes(x = "", y=freq, fill = factor(class))) +
+  geom_bar(width = 1, stat = "identity") +
+  theme(axis.line = element_blank(),
+     plot.title = element_text(hjust=0.5)) +
+     labs(fill="class",
+        x=NULL,
+       y=NULL, 
+        title="Pie Chart of class", # 图片名
+        caption="Source: mpg")  # 注释
+pie
+```
+
+创建所需的饼图
+
+```{r}
+pie + coord_polar(theta = "y", start=0)
+```
+
+# ggplot2 - 边际图
+
+边际图用于评估两个变量之间的关系并检查它们的分布。当我们谈到创建边际图时，它们只不过是在各自的 x 轴和 y 轴边缘具有直方图、箱线图或点图的散点图。
+
+使用包"ggExtra"在 R 中创建边际图
+
+```{r}
+library(ggplot2,ggExtra)
+
+head(mpg)
+
+# 绘图
+mpg_pic <- ggplot(mpg,aes(x = cty,y = hwy)) + 
+  geom_count()+
+  geom_smooth(method = 'lm',se = F)
+
+mpg_pic
+```
+
+使用 ggMarginal 函数创建边际图，这有助于生成两个属性"hwy"和"cty"之间的关系。
+
+```{r}
+
+ggMarginal(mpg_pic, type = "histogram", fill="transparent")  # 添加边际直方图
+ggMarginal(mpg_pic, type = "boxplot", fill="transparent")   # 添加边际箱图
+```
+
+# ggplot2 - 气泡图
+
+气泡图其实就是散点图，它基本上是一个散点图，第三个数值变量用于表示圆圈大小。
+
+绘制气泡图
+
+```{r}
+ggplot(mpg, aes(x=cty, y=hwy, size = displ)) + # size表示依据size的值定义气泡大小
+  geom_point(alpha=0.7)+
+  geom_smooth(method = 'lm',se = F)
+```
+
+# ggplot2 - 发散图
+
+加载所需的包并在 mpg 数据集中创建一个名为"汽车名称"的新列。
+
+```{r}
+#Load ggplot 
+library(ggplot2) 
+
+# 为汽车名称创建新列 
+mtcars$`car name` <- rownames(mtcars) 
+
+# 计算标准化的 mtacrs
+mtcars$mpg_z <- round((mtcars$mpg - mean(mtcars$mpg))/sd(mtcars$mpg), 2) 
+
+# 高于/低于平均值标志 
+mtcars$mpg_type <- ifelse(mtcars$mpg_z < 0, "below", "above") 
+
+# sort 
+mtcars <- mtcars[order(mtcars$mpg_z), ]
+
+mtcars
+```
+
+将值转换为因子以保留特定图中的排序顺序
+
+```{r}
+# 转换为因子以保留图中的排序顺序。
+mtcars$`car name` <- factor(mtcars$`car name`, levels = mtcars$`car name`)
+
+```
+
+创建条形图
+
+散条形图标记了一些维度成员相对于所述值指向向上或向下的方向。
+
+发散条形图的输出如下所示，我们使用函数 geom_bar 来创建条形图
+
+```{r}
+# 发散的条形图
+ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) +
+  geom_bar(stat='identity', aes(fill=mpg_type), width=.5) +
+  scale_fill_manual(name="Mileage",
+     labels = c("Above Average", "Below Average"),
+     values = c("above"="#00ba38", "below"="#f8766d")) +
+ labs(subtitle="Normalised mileage from 'mtcars'",
+     title= "Diverging Bars") +
+  coord_flip()
+```
+
+发散帮帮糖图
+
+只需更改要使用的函数，即 geom_segment()，它有助于创建棒棒糖图。
+
+```{r}
+ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) +
+ geom_point(stat='identity', fill="black", size=6) +
+ geom_segment(aes(y = 0,
+    x = `car name`,
+    yend = mpg_z,
+    xend = `car name`),
+       color = "black") +
+ geom_text(color="white", size=2) +
+ labs(title="Diverging Lollipop Chart",
+    subtitle="Normalized mileage from 'mtcars': Lollipop") +
+ ylim(-2.5, 2.5) +
+ coord_flip()
+```
+
+密度图
+
+密度图是上述数据集中任何数值变量分布的图形表示。它使用核密度估计来显示变量的概率密度函数。
+
+"ggplot2"包包含一个名为 geom_density() 的函数来创建密度图。
+
+```{r}
+p <- ggplot(mpg, aes(cty)) +
+  geom_density(aes(fill=factor(cyl)), alpha=0.8)
+ p
+```
+
+箱线图
+
+箱线图也称为箱须图，表示数据的五个数字摘要。五个数字摘要包括最小值、第一四分位数、中位数、第三四分位数和最大值等值。穿过箱线图中间部分的垂直线被视为"中位数"。
+
+```{r}
+p <- ggplot(mpg, aes(class, cty)) +
+  geom_boxplot(varwidth=T, fill="blue")
+p + labs(title="A Box plot Example",
+    subtitle="Mileage by Class",
+    caption="MPG Dataset",
+    x="Class",
+    y="Mileage")
+p
+```
+
+点图
+
+点图类似于散点图，只是维度不同。在本节中，我们将在现有的箱线图中添加点图，以获得更好的图像和清晰度。
+
+```{r}
+p <- ggplot(mpg, aes(manufacturer, cty)) +
+ geom_boxplot() +
+ theme(axis.text.x = element_text(angle=65, vjust=0.6))
+p
+```
+
+小提琴图
+
+```{r}
+p <- ggplot(mpg, aes(class, cty))
+
+p + geom_violin()
+```
+
+设置背景颜色
+
+命令更改背景颜色，这有助于更改面板 (panel.background) −
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Species))+
+  geom_point(color="firebrick")+
+ theme(panel.background = element_rect(fill = 'white'),
+       axis.line = element_line(color = 'black'))
+```
+
+## 6、R数据清洗
+
+```{r}
+library(readxl)
+files <- "A:\\Rstudio\\学习R\\学习R_数据\\第九批_AF.xlsx"
+
+dt <- read_excel(files)
+
+head(dt,5)
+```
+
+删除含有缺失值的行
+
+```{r}
+library(dplyr)
+dt_omit <- dt %>% na.omit()
+```
+
+删除重复行
+
+```{r}
+dt_repeat <- dt_omit %>% distinct(.keep_all = T)
+                            
+```
+
+删除某列中值为NaN的行
+
+```{r}
+dt_repeat
+
+# 删除某列中值为NaN的行
+dt_clear <- dt_repeat %>% 
+  filter(detection != 'NaN')
+
+#同时 删除某列中值为NaN、a的行
+dt_clear <- dt_repeat %>% 
+  filter(detection %in% c('a','NaN'))  # detection为列名
+```
+
+一个Excel文件多个sheet一次性读取，存为列表，方便访问、批处理
+
+以A:\Rstudio\学习R\\学习R_数据下的rna_seq.xlsx文件为例
+
+```{r}
+path = 'A:\\Rstudio\\学习R\\学习R_数据'
+setwd(path)
+
+library(rio)
+
+# 读取所有Sheet到列表
+RNA_seq <- import_list("RNA_seq.xlsx")
+
+# 自动命名列表元素（Sheet名）
+names(RNA_seq) <- excel_sheets("RNA_seq.xlsx")
+```
+
+将一个excel的多个sheet横向合并,**指定列**
+
+如果多个Sheet需要按某一列（如样本ID）对齐后再横向合并：
+
+```{r}
+path = 'A:\\Rstudio\\学习R\\学习R_数据'
+setwd(path)
+
+# 加载包
+library(readxl)
+library(dplyr)
+library(purrr)
+
+file <- 'RNA_seq.xlsx'
+
+# 1. 读取Excel中的所有Sheet名称
+sheet_names <- excel_sheets(file)
+
+# 2. 读取所有Sheet到列表
+RNA_dt <- map(sheet_names, ~ read_excel(file, sheet = .x))
+
+# 假设所有Sheet都有"ID"列
+merged_data <- reduce(RNA_dt, ~ full_join(.x, .y, by = "gene_id"))
+
+# 或使用左连接（以第一个Sheet的ID为准）,只保留第一个sheet的ID，其他sheet的ID删除
+merged_data <- reduce(RNA_dt, ~ left_join(.x, .y, by = "gene_id"))
+
+head(merged_data)
+```
+
+合并两个数据框，指定列
+
+```{r}
+data_1 <- head(RNA_seq$chicken_liver_A_counts,10)
+data_2 <- head(RNA_seq$chicken_muscle_A_counts,15)
+
+
+```
+
+保留两个数据框中关键列匹配的行
+
+```{r}
+library(dplyr)
+
+# 按指定列（如"ID"）合并，仅保留共有的行
+data_same <- inner_join(data_1, data_2, by = "gene_id")
+
+# 多列作为关键列
+# merged_data <- inner_join(data_1, data_2, by = c("ID", "Date"))
+
+head(data_same)
+```
+
+**保留左边**数据框的所有行，匹配右边数据框的列，只保留df1有的行
+
+```{r}
+# 保留df1的所有行，df2无匹配时填充NA
+data_all_1 <- left_join(data_1,data_2,by = 'gene_id')
+head(data_all_1)
+```
+
+保留两个数据框的所有行，无匹配时填充NA
+
+```{r}
+data_all <- full_join(data_1,data_2,by = 'gene_id')
+head(data_all,15)
+```
+
+**保留右边**数据框的所有行，匹配左边数据框的列,Na填充左边没有
+
+```{r}
+data_all_2 <- right_join(data_1,data_2,by = 'gene_id')
+head(data_all_2,15)
+```
+
+保留左边数据框中与右边匹配的行，不合并右边列，保留左边数据框中出现在右边的行
+
+```{r}
+# 筛选df1中存在于df2的行
+filtered_data <- semi_join(data_1,data_2,by = 'gene_id')
+
+```
+
+保留左边数据框中与右边不匹配的行
+
+```{r}
+# 筛选df1中不存在于df2的行
+filtered_data_a <- anti_join(data_2,data_1,by = 'gene_id')
+```
+
+选出某列的值为a的行
+
+```{r}
+library(tidyr)
+head(iris)
+setosa <- iris %>% 
+  filter(Species == 'setosa')  # 筛选出species列中是setosa的行
+setosa
+```
+
+根据某列的值的大小范围进行筛选
+
+```{r}
+head(iris)
+
+petal_len_less <- iris %>%
+  filter(Petal.Length < 1.5)  # 筛选Petal.Length小于1.5的行
+
+nrow(petal_len_less)
+```
